@@ -1,5 +1,17 @@
-import { Router } from 'express';
+import { Router, request } from 'express';
 
 const routes = Router();
+
+// eslint-disable-next-line no-shadow
+routes.post('/users', (request, response) => {
+  const { name, email } = request.body;
+
+  const user = {
+    name,
+    email,
+  };
+
+  return response.json({ message: 'Hello GoStack' });
+});
 
 export default routes;
