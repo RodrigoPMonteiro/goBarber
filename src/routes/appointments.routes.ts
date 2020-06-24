@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { uuid } from 'uuidv4';
-import { startOfHour, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
 
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
+import CreateAppointmentService from '../services/CreateAppointmentServices';
+import AppointmentRepository from '../repositories/AppointmentsRepository';
 
 const appoitmentsRouter = Router();
 const appointmentsRepository = new AppointmentsRepository();
@@ -18,29 +19,28 @@ appoitmentsRouter.get('/', (request, response) => {
   return response.json(appointments);
 });
 
+// Rota: Receber a req, chamar outro arquivo, devolver uma resposta
+
 // Cria rota de Criação de Agendamentos
 appoitmentsRouter.post('/', (request, response) => {
-  const { provider, date } = request.body;
+  try {
+    const { provider, date } = request.body;
 
-  const parsedDate = startOfHour(parseISO(date));
+    const parsedDate = parseISO(date); // pega string e transforma em uma data
 
-  const findAppointmentInSameDate = appointmentsRepository.findByDate(
-    parsedDate,
-  );
+    const createAppointment = new CreateAppointmentService(
+      appointmentsRepository,
+    );
 
-  if (findAppointmentInSameDate) {
-    return response
-      .status(400)
-      .json({ message: 'This appointment is already booked' });
+    const appointment = createAppointment.execute({
+      date: parsedDate,
+      provider,
+    });
+
+    return response.json(appointment);
+  } catch (err) {
+    return response.status(400).json({ error: err.message });
   }
-
-  const appointment = appointmentsRepository.create({
-    provider,
-    date: parsedDate,
-    // mais parametros aqui ( como argumentos so informa erro de quantidade de parâmetros )
-  });
-
-  return response.json(appointment);
 });
 
 export default appoitmentsRouter;
