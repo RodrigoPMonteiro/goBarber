@@ -3,7 +3,6 @@ import { parseISO } from 'date-fns';
 
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 import CreateAppointmentService from '../services/CreateAppointmentServices';
-import AppointmentRepository from '../repositories/AppointmentsRepository';
 
 const appoitmentsRouter = Router();
 const appointmentsRepository = new AppointmentsRepository();
@@ -39,7 +38,7 @@ appoitmentsRouter.post('/', (request, response) => {
 
     return response.json(appointment);
   } catch (err) {
-    return response.status(400).json({ error: err.message });
+    return response.status(400).json({ error: err.message }); // Status para erros conhecidos;
   }
 });
 
