@@ -5,9 +5,20 @@ import { startOfHour, parseISO } from 'date-fns';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
 const appoitmentsRouter = Router();
-
 const appointmentsRepository = new AppointmentsRepository();
 
+// SoC: Separation of Concerns ( Separação de preocupações )
+// Cada rota/repositorio/serviço tem que ter apenas 1 preocupação
+
+// Cria rota de Listagem de Agendamentos
+appoitmentsRouter.get('/', (request, response) => {
+  // repositorio tem responsabilidade de se comunicar com nossa fonte de DADOS
+  const appointments = appointmentsRepository.all();
+
+  return response.json(appointments);
+});
+
+// Cria rota de Criação de Agendamentos
 appoitmentsRouter.post('/', (request, response) => {
   const { provider, date } = request.body;
 
