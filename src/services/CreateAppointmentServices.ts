@@ -1,4 +1,5 @@
 import { startOfHour } from 'date-fns';
+import { getCustomRepository } from 'typeorm';
 
 import Appointment from '../models/Appointment';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
@@ -19,18 +20,19 @@ interface RequestDTO {
  */
 
 class CreateAppointmentService {
-  private appointmentsRepository: AppointmentsRepository;
+  // private appointmentsRepository: AppointmentsRepository;
 
-  // preciso falar que o parametro do construtor é a instancia da outra classe
-  constructor(appointmentsRepository: AppointmentsRepository) {
-    this.appointmentsRepository = appointmentsRepository;
-  }
+  // // preciso falar que o parametro do construtor é a instancia da outra classe
+  // constructor(appointmentsRepository: AppointmentsRepository) {
+  //   this.appointmentsRepository = appointmentsRepository;
+  // }
 
-  public execute({ date, provider }: RequestDTO): Appointment {
+  public async execute({ date, provider }: RequestDTO): Promise<Appointment> {
+    const appointmentsRepository = getCustomRepository(AppointmentsRepository);
     // Regra de Negócio : agendamento só pode acontecer de 1 em 1 hora -
     const appointmentDate = startOfHour(date);
 
-    const findAppointmentInSameDate = this.appointmentsRepository.findByDate(
+    const findAppointmentInSameDate = await appointmentsRepository.findByDate(
       appointmentDate,
     );
 
@@ -41,11 +43,14 @@ class CreateAppointmentService {
       //  .json({ message: 'This appointment is already booked' });
     }
 
-    const appointment = this.appointmentsRepository.create({
+    const appointment = appointmentsRepository.create({
+      // não precisa ser await
       provider,
       date: appointmentDate,
       // mais parametros aqui ( como argumentos so informa erro de quantidade de parâmetros )
     });
+
+    await appointmentsRepository.save(appointment);
 
     return appointment;
   }
