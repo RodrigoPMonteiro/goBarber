@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { startOfHour } from 'date-fns';
 import { getCustomRepository } from 'typeorm';
 
@@ -11,7 +12,7 @@ import AppointmentsRepository from '../repositories/AppointmentsRepository';
  */
 
 interface RequestDTO {
-  provider: string;
+  provider_id: string;
   date: Date;
 }
 
@@ -27,7 +28,10 @@ class CreateAppointmentService {
   //   this.appointmentsRepository = appointmentsRepository;
   // }
 
-  public async execute({ date, provider }: RequestDTO): Promise<Appointment> {
+  public async execute({
+    date,
+    provider_id,
+  }: RequestDTO): Promise<Appointment> {
     const appointmentsRepository = getCustomRepository(AppointmentsRepository);
     // Regra de Negócio : agendamento só pode acontecer de 1 em 1 hora -
     const appointmentDate = startOfHour(date);
@@ -45,7 +49,7 @@ class CreateAppointmentService {
 
     const appointment = appointmentsRepository.create({
       // não precisa ser await
-      provider,
+      provider_id,
       date: appointmentDate,
       // mais parametros aqui ( como argumentos so informa erro de quantidade de parâmetros )
     });
