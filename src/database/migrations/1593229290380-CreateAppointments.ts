@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
-import { uuid } from 'uuidv4';
+// import { uuid } from 'uuidv4';
 
 // eslint-disable-next-line import/prefer-default-export
 export class CreateAppointments1593229290380 implements MigrationInterface {
