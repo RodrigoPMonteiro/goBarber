@@ -6,7 +6,11 @@ import { parseISO } from 'date-fns';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 import CreateAppointmentService from '../services/CreateAppointmentServices';
 
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
+
 const appoitmentsRouter = Router();
+
+appoitmentsRouter.use(ensureAuthenticated);
 // const appointmentsRepository = new AppointmentsRepository();
 
 // SoC: Separation of Concerns ( Separação de preocupações )
@@ -14,6 +18,7 @@ const appoitmentsRouter = Router();
 
 // Cria rota de Listagem de Agendamentos
 appoitmentsRouter.get('/', async (request, response) => {
+  console.log(request.user);
   const appointmentsRepository = getCustomRepository(AppointmentsRepository);
   // repositorio tem responsabilidade de se comunicar com nossa fonte de DADOS
   const appointments = await appointmentsRepository.find(); // all();
@@ -25,22 +30,22 @@ appoitmentsRouter.get('/', async (request, response) => {
 
 // Cria rota de Criação de Agendamentos
 appoitmentsRouter.post('/', async (request, response) => {
-  try {
-    const { provider_id, date } = request.body;
+  // try {
+  const { provider_id, date } = request.body;
 
-    const parsedDate = parseISO(date); // pega string e transforma em uma data
+  const parsedDate = parseISO(date); // pega string e transforma em uma data
 
-    const createAppointment = new CreateAppointmentService();
+  const createAppointment = new CreateAppointmentService();
 
-    const appointment = await createAppointment.execute({
-      date: parsedDate,
-      provider_id,
-    });
+  const appointment = await createAppointment.execute({
+    date: parsedDate,
+    provider_id,
+  });
 
-    return response.json(appointment);
-  } catch (err) {
-    return response.status(400).json({ error: err.message }); // Status para erros conhecidos;
-  }
+  return response.json(appointment);
+  // } catch (err) {
+  //   return response.status(400).json({ error: err.message }); // Status para erros conhecidos;
+  // }
 });
 
 export default appoitmentsRouter;
