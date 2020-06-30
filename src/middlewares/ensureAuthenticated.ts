@@ -29,9 +29,9 @@ export default function ensureAuthenticated(
     const decoded = verify(
       token,
       authConfig.jwt.secret,
-    ); /* '4abe2d96cf32d5c27330d7a93a2b2fa2' */
+    );
 
-    // console.log(decoded);
+    console.log(decoded);
 
     const { sub } = decoded as TokenPayLoad;
 

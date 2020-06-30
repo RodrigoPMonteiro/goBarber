@@ -4,7 +4,7 @@
   "port": 5432,
   "username": "postgres",
   "password": "laura",
-  "data": "gostack_gobarber",
+  "data": "postgres",
   "entities": [
     "./src/models/*.ts"
   ],
