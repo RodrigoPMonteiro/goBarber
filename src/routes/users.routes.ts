@@ -20,7 +20,7 @@ const upload = multer(uploadConfig);
 
 // Cria rota de Criação de Agendamentos
 usersRouter.post('/', async (request, response) => {
-  try {
+//  try {
     const { name, email, password } = request.body;
 
     const createUser = new CreateUserService();
@@ -35,9 +35,9 @@ usersRouter.post('/', async (request, response) => {
     delete user.password;
 
     return response.json(user); // só para funcionar
-  } catch (err) {
-    return response.status(400).json({ error: err.message }); // Status para erros conhecidos;
-  }
+//  } catch (err) {
+//   return response.status(400).json({ error: err.message }); // Status para erros conhecidos;
+//  }
 });
 
 usersRouter.patch(
@@ -45,7 +45,7 @@ usersRouter.patch(
   ensureAuthenticated,
   upload.single('avatar'),
   async (request,response) =>{
-    try{
+  //  try{
       const updateUserAvatar = new UpdateUserAvatarService();
       const user = await updateUserAvatar.execute({
         user_id: request.user.id ,
@@ -55,9 +55,9 @@ usersRouter.patch(
       delete user.password;
       
       return response.json({ user })
-    } catch(err){
-      return response.status(400).json({ error: err.message }); // Status para erros conhecidos;
-    }
+  //  } catch(err){
+  //    return response.status(400).json({ error: err.message }); // Status para erros conhecidos;
+  //  }
   } 
 ); // patch porque quero atualizar uma unica informação do usuário
 
