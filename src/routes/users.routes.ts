@@ -20,44 +20,45 @@ const upload = multer(uploadConfig);
 
 // Cria rota de Criação de Agendamentos
 usersRouter.post('/', async (request, response) => {
-  try {
-    const { name, email, password } = request.body;
+  //  try {
+  const { name, email, password } = request.body;
 
-    const createUser = new CreateUserService();
+  const createUser = new CreateUserService();
 
-    const user = await createUser.execute({
-      name,
-      email,
-      password,
-    });
-    // se tem regra de negócio, vai criar um novo Service
+  const user = await createUser.execute({
+    name,
+    email,
+    password,
+  });
+  // se tem regra de negócio, vai criar um novo Service
 
-    delete user.password;
+  delete user.password;
 
-    return response.json(user); // só para funcionar
-  } catch (err) {
-    return response.status(400).json({ error: err.message }); // Status para erros conhecidos;
-  }
+  return response.json(user); // só para funcionar
+  //  } catch (err) {
+  //   return response.status(400).json({ error: err.message }); // Status para erros conhecidos;
+  //  }
 });
 
 usersRouter.patch(
   '/avatar',
   ensureAuthenticated,
   upload.single('avatar'),
+
   async (request, response) => {
-    try {
-      const updateUserAvatar = new UpdateUserAvatarService();
-      const user = await updateUserAvatar.execute({
-        user_id: request.user.id,
-        avatarFilename: request.file.filename,
-      });
+    //  try{
+    const updateUserAvatar = new UpdateUserAvatarService();
+    const user = await updateUserAvatar.execute({
+      user_id: request.user.id,
+      avatarFilename: request.file.filename,
+    });
 
-      delete user.password;
+    delete user.password;
 
-      return response.json({ user });
-    } catch (err) {
-      return response.status(400).json({ error: err.message }); // Status para erros conhecidos;
-    }
+    return response.json({ user });
+    //  } catch(err){
+    //    return response.status(400).json({ error: err.message }); // Status para erros conhecidos;
+    //  }
   },
 ); // patch porque quero atualizar uma unica informação do usuário
 
