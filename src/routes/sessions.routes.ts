@@ -12,7 +12,7 @@ const sessionsRouter = Router();
 // Rota: Receber a req, chamar outro arquivo, devolver uma resposta
 
 sessionsRouter.post('/', async (request, response) => {
-  try{
+  try {
     const { email, password } = request.body;
 
     const authenticateUser = new AuthenticateUserService();
@@ -25,7 +25,7 @@ sessionsRouter.post('/', async (request, response) => {
     delete user.password;
 
     return response.json({ user, token }); // só para funcionar
-  }catch(err){
+  } catch (err) {
     return response.status(err.statusCode).json({ error: err.message });
   }
 });

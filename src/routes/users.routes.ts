@@ -44,21 +44,21 @@ usersRouter.patch(
   '/avatar',
   ensureAuthenticated,
   upload.single('avatar'),
-  async (request,response) =>{
-    try{
+  async (request, response) => {
+    try {
       const updateUserAvatar = new UpdateUserAvatarService();
       const user = await updateUserAvatar.execute({
-        user_id: request.user.id ,
-        avatarFilename: request.file.filename, 
+        user_id: request.user.id,
+        avatarFilename: request.file.filename,
       });
 
       delete user.password;
-      
-      return response.json({ user })
-    } catch(err){
+
+      return response.json({ user });
+    } catch (err) {
       return response.status(400).json({ error: err.message }); // Status para erros conhecidos;
     }
-  } 
+  },
 ); // patch porque quero atualizar uma unica informação do usuário
 
 export default usersRouter;
